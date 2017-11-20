@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang=en ng-app=App>
+	<head>
+		<link rel=stylesheet type=text/css crossorigin=anonymous integrity=sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u
+			href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
+		/>
+		<link rel=stylesheet type=text/css crossorigin=anonymous integrity=sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp
+			href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css
+		/>
+		<link rel=stylesheet type=text/css
+		 href=main.css
+		/>
+		<script type=text/javascript crossorigin=anonymous integrity=sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ
+			src=https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+		></script>
+		<script type=text/javascript crossorigin=anonymous integrity=sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa
+			src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js
+		></script>
+		<script type=text/javascript crossorigin=anonymous integrity=sha384-0nHK4IeX5WIG78+/bQh3VuaxSbnwfPdnkdkgNeh2WVq7tbWmAAxOro56T9A75d8F
+			src=https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js
+		></script>
+		<script type=text/javascript
+			src=regula_falsi.js
+		></script>
+		<script type=text/javascript
+			src=crop.class.js
+		></script>
+		<script type=text/javascript
+			src=main.js
+		></script>
+	</head>
+	<body ng-controller="CropAnalysisController">
+		The
+		<input
+			ng-model=week_no
+			type=number min=1 max=4
+		/>
+		<select
+			ng-model=weekday_index
+			ng-options="weekday.index as weekday.name for weekday in weekdays"
+		></select> (aka day <input
+			ng-model=day_no
+			type=number min=1 max=28
+		/>) of <select
+			ng-model=current_season
+			ng-options="season as season.name for season in seasons"
+		></select>
+		<table class="table crops" table ng-repeat="fields in [[
+			'name'
+			,'dpy'
+			,'sell_price'
+		]]">
+			<colgroup>
+				<col
+					ng-repeat="field in fields"
+					ng-class=field
+				/>
+				<col
+					class=days
+				/>
+				<col
+					class=days_remaining
+				/>
+			</colgroup>
+			<thead><tr>
+				<th
+					ng-repeat="field in fields"
+					ng-class=field
+					ng-bind=field
+				></th>
+				<th class=days>days</th>
+				<th class=days_remaining>days remaining</th>
+			</th></thead>
+			<tr class=crop ng-repeat="crop in current_season.crops | orderBy : '-dpy'" ng-controller=CropController>
+				<td 
+					ng-repeat="field in fields"
+					ng-class=field
+					ng-bind="crop[field] | cropField : field"
+				></td>
+				<td><input type=number min=0 max="{{crop.last_day - crop.start_day}}" ng-model=crop.days></td>
+				<td ng-bind="crop.last_day - crop.days - crop.start_day"></td>
+			</tr>
+		</table>
+	</body>
+</html>
